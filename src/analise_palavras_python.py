@@ -1,29 +1,23 @@
 import time
-import csv
+import pandas as pd
 
-tempo_inicial = time.time()
+import streamlit as st
 
-with open ('data/palavras_portugues.txt', mode='r',encoding='latin-1') as arquivo:
-    conteudo_palavras = arquivo.read()
-lista_palavras: list = conteudo_palavras.splitlines()
-total_palavras = len(lista_palavras)
+def analise_palavras(df=None):
+    
+    caracteres_especiais = st.segmented_control('Utilizar caracteres especiais?',
+                                                ['SIM','NÃO'], 
+                                                key='caracteres_especiais')
+    if caracteres_especiais == 'NÃO':
+        # replace de caracteres especiais para os normais
+        df['caracter'] = df['caracter'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
+        df = df[df['caracter'].str.isalpha()]
+        df = df.groupby('caracter', as_index=False).sum()
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric('Quantidade de letras',df.shape[0])
+    
+    return df
 
-
-frequencia_caracteres: dict = {}
-
-contador = 0
-
-for palavra in lista_palavras:
-    for caracter in palavra.lower():
-        frequencia_caracteres[caracter] = frequencia_caracteres.get(caracter, 0) + 1
-    contador += 1
-    if contador % 10000 == 0:
-        print(f'{contador} palavras lidas')
-
-tempo_final = time.time()
-print(f'tempo inicial: {tempo_inicial}\n tempo final: {tempo_final}\n tempo corrido: {tempo_final-tempo_inicial:.2f}')
-
-
-with open('data/frequencia_caracteres.csv', 'w', newline='',encoding='latin-1') as arquivo_csv:
-    for k, v in frequencia_caracteres.items():
-        arquivo_csv.write(f'{k},{v}\n')
+if __name__ == "__main__":
+    analise_palavras()
