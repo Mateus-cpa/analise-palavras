@@ -25,8 +25,12 @@ def processar_palavras():
 
     with open ('data/palavras_portugues.txt', mode='r',encoding='latin-1') as arquivo:
         conteudo_palavras = arquivo.read()
+
     lista_palavras: list = conteudo_palavras.splitlines()
 
+    #salvar em csv
+    df = pd.DataFrame(lista_palavras, columns=['palavra'])
+    df.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
 
     frequencia_caracteres: dict = {}
 

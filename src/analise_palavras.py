@@ -3,7 +3,7 @@ import pandas as pd
 
 import streamlit as st
 
-def analise_palavras(df=None):
+def analise_caracteres(df=None):
     
     caracteres_especiais = st.segmented_control('Utilizar caracteres especiais?',
                                                 ['SIM','NÃO'], 
@@ -17,7 +17,14 @@ def analise_palavras(df=None):
     with col1:
         st.metric('Quantidade de letras',df.shape[0])
     
+    df = df.sort_values(by='frequencia', ascending=False).reset_index(drop=True)
+
+def analise_palavras(df=None):
+    # pontuação de palavras pela frequência das letras
+    df['pontuacao'] = df['frequencia'] / df['frequencia'].sum()
+
     return df
 
 if __name__ == "__main__":
+    analise_caracteres()
     analise_palavras()
