@@ -6,8 +6,8 @@ from analise_palavras import analise_caracteres, analise_palavras
 def tela_streamlit():
     st.title('Análise de palavras em português brasileiro')
     with st.expander('Atualizar base de dados'):
-        importar_palavras()
-        df_caracteres = processar_palavras()
+        lista_palavras = importar_palavras()
+        df_caracteres = processar_palavras(lista_palavras=lista_palavras)
     st.subheader('Análise das letras')
     df = analise_caracteres(df_caracteres)
     st.dataframe(df)
