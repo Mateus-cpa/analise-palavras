@@ -1,18 +1,21 @@
 import streamlit as st
 
-from request_palavras import importar_palavras, processar_palavras
+from request_palavras import importar_palavras, contar_caracteres
 from analise_palavras import analise_caracteres, analise_palavras
+from mostrar_dados import mostrar_dados
+
 
 def tela_streamlit():
     st.title('Análise de palavras em português brasileiro')
     with st.expander('Atualizar base de dados'):
-        lista_palavras = importar_palavras()
-        df_caracteres = processar_palavras(lista_palavras=lista_palavras)
+        importar_palavras()
+        st.session_state.df_caracteres = contar_caracteres(lista_palavras=st.session_state.lista_palavras)
     st.subheader('Análise das letras')
-    df = analise_caracteres(df_caracteres)
-    st.dataframe(df)
-    st.bar_chart(df, x='caracter', y='frequencia', horizontal=False)
+    # -- tratamento --
+    df_caracteres = analise_caracteres(st.session_state.df_caracteres)
 
+    # -- mostrar dados caracteres --
+    mostrar_dados(df_caracteres)
 
 if __name__ == "__main__":
     tela_streamlit()

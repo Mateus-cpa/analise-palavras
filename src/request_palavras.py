@@ -25,9 +25,9 @@ def importar_palavras():
         st.success(f'quantidade de palavras: {len(lista_palavras)}')
         st.success('Base de dados atualizada com sucesso!')
 
-        return lista_palavras
+        st.session_state.lista_palavras = lista_palavras
 
-def processar_palavras(lista_palavras: list = None):
+def contar_caracteres(lista_palavras: list = None):
     """
     Processa a lista de palavras e retorna um DataFrame com a frequência de caracteres.
     Args:
@@ -37,15 +37,16 @@ def processar_palavras(lista_palavras: list = None):
     tempo_inicial = time.time()
 
     #salvar em csv
-    df: pd.DataFrame = pd.DataFrame(lista_palavras, columns=['palavra'])
-    df.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
+    df_palavras: pd.DataFrame = pd.DataFrame(lista_palavras, columns=['palavra'])
+    df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
 
     frequencia_caracteres: dict = {}
 
     for palavra in lista_palavras:
         for caracter in palavra.lower():
             frequencia_caracteres[caracter] = frequencia_caracteres.get(caracter, 0) + 1
-        
+
+    st.code(frequencia_caracteres)    
     tempo_final = time.time()
     st.success(f'tempo corrido: {tempo_final-tempo_inicial:.2f} segundos')
 
@@ -57,4 +58,4 @@ def processar_palavras(lista_palavras: list = None):
 
 if __name__ == "__main__":
     importar_palavras()
-    processar_palavras()
+    contar_caracteres()
