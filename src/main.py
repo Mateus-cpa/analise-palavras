@@ -24,18 +24,3 @@ def tela_streamlit():
 
 if __name__ == "__main__":
     tela_streamlit()
-"""
-selecionar se considera caracteres especiais
-criar botões de letras
-filtros de palavras que começam com a letra
-filtros de palavras que terminam com a letra
-filtro de palavras que possuam a letra
-filtro de palavras que não possuam a letra
-filtro de palavras pelo tamanho
-indicadores de:
-- letra mais abundante
-- palavra com letras mais comuns
-- palavra com letras mais raras
-gráfico de barras com frequência das letras
-
-"""

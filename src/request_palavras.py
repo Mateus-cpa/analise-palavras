@@ -11,6 +11,7 @@ def importar_palavras():
 
 
     """
+    tempo_inicial = time.time()
 
     try:
         resposta = re.get('https://www.ime.usp.br/~pf/dicios/br-utf8.txt')
@@ -18,7 +19,7 @@ def importar_palavras():
         st.error(f'Erro ao acessar o site: {e}')
         return []
 
-    conteudo_site = resposta.text.encode(encoding='utf-8').decode(encoding='utf-8')
+    conteudo_site = resposta.text
 
     st.write(f'tipo conteúdo site: {type(conteudo_site)}')
     lista_palavras = conteudo_site.split('\n')
@@ -32,12 +33,7 @@ def importar_palavras():
 
 
     st.success('Iniciando processamento das palavras...')
-    tempo_inicial = time.time()
-
-    #salvar em csv
-    df_palavras: pd.DataFrame = pd.DataFrame(lista_palavras, columns=['palavra'])
-    df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
-
+    
     frequencia_caracteres: dict = {}
 
     for palavra in lista_palavras:

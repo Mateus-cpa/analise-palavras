@@ -9,8 +9,18 @@ def mostrar_dados(df=None):
         st.metric('Maior frequência',df['frequencia'].max())
 
     st.bar_chart(df, x='caracter', y='frequencia', horizontal=False)
-
+    st.dataframe(df)
     return df
 
 if __name__ == "__main__":
     mostrar_dados()
+
+    """
+    Tela de visualização dos dados
+indicadores de:
+- letra mais abundante
+- palavra com letras mais comuns
+- palavra com letras mais raras
+gráfico de barras com frequência das letras
+
+"""
