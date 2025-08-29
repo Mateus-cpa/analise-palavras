@@ -20,9 +20,12 @@ def filtra_dados(df=None):
     if ultima_letra:
         df = df[df['palavra'].str.endswith(ultima_letra)]
     
+    # 
+
+    # mostrar resultados
     st.metric('Quantidade de palavras', len(df))
     st.code(df)
-    
+
     return df
 
 if __name__ == "__main__":
@@ -30,8 +33,6 @@ if __name__ == "__main__":
 
 """selecionar se considera caracteres especiais
 criar botões de letras
-filtros de palavras que começam com a letra
-filtros de palavras que terminam com a letra
 filtro de palavras que possuam a letra
 filtro de palavras que não possuam a letra
 filtro de palavras pelo tamanho

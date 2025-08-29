@@ -29,12 +29,17 @@ def analise_caracteres(df_caracteres=None):
 
     return df_caracteres
 
-def analise_palavras(df=None):
-    # pontuação de palavras pela frequência das letras
-    df['pontuacao'] = df['frequencia'] / df['frequencia'].sum()
-    
+def analise_palavras(df_palavras=None):
+    if df_palavras is None:
+        df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
+    df_palavras['tamanho'] = df_palavras['palavra'].str.len()
+    df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
 
-    return df
+    df_palavras_por_tamanho = df_palavras.groupby('tamanho', as_index=False).count()
+    df_palavras_por_tamanho = df_palavras_por_tamanho.rename(columns={'palavra': 'quantidade'})
+    df_palavras_por_tamanho.to_csv('data/palavras_por_tamanho.csv', index=False, encoding='latin-1')
+    st.session_state.df_palavras_por_tamanho = df_palavras_por_tamanho
+
 
 if __name__ == "__main__":
     analise_caracteres()

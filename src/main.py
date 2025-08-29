@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 
 from request_palavras import importar_palavras 
-from analise_palavras import analise_caracteres
+from analise_palavras import analise_caracteres, analise_palavras
 from filtra_dados import filtra_dados
-from mostrar_dados import mostrar_dados
+from mostrar_dados import mostrar_dados_caracteres, mostrar_dados_palavras
 
 
 def tela_streamlit():
@@ -19,15 +19,19 @@ def tela_streamlit():
     
     # -- tratamento --
     df_caracteres = analise_caracteres(df_caracteres)
+    df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
+    analise_palavras(df_palavras=df_palavras)
 
     # -- mostrar dados caracteres --
-    mostrar_dados(df_caracteres)
+    mostrar_dados_caracteres(df_caracteres)
     
     # -- filtro de dados palavras --
     if 'df_palavras' not in st.session_state:
         st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
-
     filtra_dados(st.session_state.df_palavras)
+
+    # mostrar dados palavras
+    mostrar_dados_palavras(st.session_state.df_palavras_por_tamanho)
 
     
 if __name__ == "__main__":
