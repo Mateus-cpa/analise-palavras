@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 
 from request_palavras import importar_palavras 
-from analise_palavras import analise_caracteres, analise_palavras
+from analise_palavras import analise_caracteres
+from filtra_dados import filtra_dados
 from mostrar_dados import mostrar_dados
 
 
@@ -19,6 +20,9 @@ def tela_streamlit():
     # -- tratamento --
     df_caracteres = analise_caracteres(df_caracteres)
 
+    # -- filtro de dados --
+    df_caracteres = filtra_dados(df_caracteres)
+    
     # -- mostrar dados caracteres --
     mostrar_dados(df_caracteres)
 
