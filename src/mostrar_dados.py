@@ -12,7 +12,6 @@ def mostrar_dados_caracteres(df=None):
     return df
 
 def mostrar_dados_palavras(df=None):
-    st.dataframe(df)
     st.bar_chart(df, x='tamanho', y='quantidade')
 
 if __name__ == "__main__":

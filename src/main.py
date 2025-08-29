@@ -22,17 +22,18 @@ def tela_streamlit():
     df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
     analise_palavras(df_palavras=df_palavras)
 
-    # -- mostrar dados caracteres --
+    # -- MOSTRAR DADOS CARACTERES --
     mostrar_dados_caracteres(df_caracteres)
     
-    # -- filtro de dados palavras --
+    # -- FILTRO DADOS PALAVRAS --
     if 'df_palavras' not in st.session_state:
         st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
     filtra_dados(st.session_state.df_palavras)
 
-    # mostrar dados palavras
+    # -- MOSTRAR DADOS PALAVRAS --
     mostrar_dados_palavras(st.session_state.df_palavras_por_tamanho)
 
+    
     
 if __name__ == "__main__":
     tela_streamlit()
