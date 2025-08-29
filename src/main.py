@@ -31,6 +31,7 @@ def tela_streamlit():
     filtra_dados(st.session_state.df_palavras)
 
     # -- MOSTRAR DADOS PALAVRAS --
+    st.subheader('Distribuição de palavras por tamanho')
     mostrar_dados_palavras(st.session_state.df_palavras_por_tamanho)
 
     

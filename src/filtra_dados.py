@@ -27,9 +27,15 @@ def filtra_dados(df=None):
     if tamanho_palavra:
         df = df[df['palavra'].str.len() == int(tamanho_palavra)]
 
-    # mostrar resultados
-    st.metric('Quantidade de palavras', len(df))
-    st.code(df)
+    col4, col5, col6 = st.columns(3)    
+    # palavras que tenham a letra
+    col4.write('Palavras que tenham a letra:')
+    letra = col4.segmented_control('',caracteres, key='letra')
+    if letra:
+        df = df[df['palavra'].str.contains(letra, case=False)]
+
+    st.markdown(f'#### {df.shape[0]} resultados')
+    st.write(df)
 
     return df
 
@@ -41,4 +47,5 @@ criar botões de letras
 filtro de palavras que possuam a letra
 filtro de palavras que não possuam a letra
 filtro de palavras pelo tamanho
-palavras com letra x na posição y"""
+palavras com letra x na posição y
+filtrar os caracteres dos filtros ao invés do total"""
