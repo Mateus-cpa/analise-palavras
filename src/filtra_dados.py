@@ -4,8 +4,13 @@ def filtra_dados(df=None):
     if df is None:
         return None
     df = df.dropna().copy()
-    # Filtros de palavras
+    
+    # Importa listas para filtros
     caracteres = st.session_state.df_caracteres['caracter'].unique().tolist()
+    caracteres.sort()
+    tamanho_palavra_lista = st.session_state.df_palavras_por_tamanho['tamanho'].unique().astype(int).tolist()
+
+    
     col1, col2, col3 = st.columns(3)
     
     # Primeira letra
@@ -22,18 +27,28 @@ def filtra_dados(df=None):
     
     # Tamanho da palavra
     col3.write('Tamanho da palavra:')
-    tamanho_palavra_lista = st.session_state.df_palavras_por_tamanho['tamanho'].unique().astype(int).tolist()
     tamanho_palavra = col3.segmented_control('',tamanho_palavra_lista, key='tamanho_palavra')
     if tamanho_palavra:
         df = df[df['palavra'].str.len() == int(tamanho_palavra)]
 
     col4, col5, col6 = st.columns(3)    
+    
+    # palavras que não tenham a letra
+    col4.write('Palavras que não tenham a letra:')
+    letra_nao = col4.segmented_control('',caracteres, key='letra_nao')
+    if letra_nao:
+        df = df[~df['palavra'].str.contains(letra_nao, case=False)]
+ 
     # palavras que tenham a letra
-    col4.write('Palavras que tenham a letra:')
-    letra = col4.segmented_control('',caracteres, key='letra')
+    col5.write('Palavras que tenham a letra:')
+    letra = col5.segmented_control('',caracteres, key='letra')
     if letra:
         df = df[df['palavra'].str.contains(letra, case=False)]
+        col6.write('Na posição:')
+        letra_posicao = col6.segmented_control('',tamanho_palavra_lista)
+        # filtrar dataframe pela posição
 
+    # -- RESULTADOS --
     st.markdown(f'#### {df.shape[0]} resultados')
     st.write(df)
 
@@ -44,8 +59,5 @@ if __name__ == "__main__":
 
 """selecionar se considera caracteres especiais
 criar botões de letras
-filtro de palavras que possuam a letra
-filtro de palavras que não possuam a letra
-filtro de palavras pelo tamanho
 palavras com letra x na posição y
 filtrar os caracteres dos filtros ao invés do total"""
