@@ -20,11 +20,15 @@ def tela_streamlit():
     # -- tratamento --
     df_caracteres = analise_caracteres(df_caracteres)
 
-    # -- filtro de dados --
-    df_caracteres = filtra_dados(df_caracteres)
-    
     # -- mostrar dados caracteres --
     mostrar_dados(df_caracteres)
+    
+    # -- filtro de dados palavras --
+    if 'df_palavras' not in st.session_state:
+        st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
 
+    filtra_dados(st.session_state.df_palavras)
+
+    
 if __name__ == "__main__":
     tela_streamlit()

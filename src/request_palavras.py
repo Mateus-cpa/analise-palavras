@@ -28,7 +28,7 @@ def importar_palavras():
     st.success('Base de dados atualizada com sucesso!')
 
     # salvar lista em csv
-    df_palavras: pd.DataFrame = pd.DataFrame(lista_palavras, columns=['palavra'])
+    df_palavras: pd.DataFrame = pd.DataFrame(lista_palavras, columns=['palavra']).dropna()
     df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
 
 
