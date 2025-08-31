@@ -13,17 +13,16 @@ def calcular_valor_palavra(palavra):
             valor += freq.values[0]
     return valor
 
-def importar_palavras():
+def importar_palavras(url):
     """
-    Importa a lista de palavras do site da USP.
+    Importa a lista de palavras do site da USP ou do githbu para inglês.
     Depois, processa a lista de palavras e retorna um DataFrame com a frequência de caracteres.
-
-
     """
-    tempo_inicial = time.time()
+    st.info('Iniciando importação da base de dados...')
 
+    tempo_inicial = time.time()
     try:
-        resposta = re.get('https://www.ime.usp.br/~pf/dicios/br-utf8.txt')
+        resposta = re.get(url[0])
     except Exception as e:
         st.error(f'Erro ao acessar o site: {e}')
         return []
@@ -56,7 +55,7 @@ def importar_palavras():
     df_palavras['tamanho'] = df_palavras['palavra'].str.len()
     
     df_frequencia = pd.DataFrame(list(frequencia_caracteres.items()), columns=['caracter', 'frequencia'])
-    df_frequencia.to_csv('data/frequencia_caracteres.csv', index=False, encoding='latin-1')
+    df_frequencia.to_csv(f'data/frequencia_caracteres_{url[1]}.csv', index=False, encoding='latin-1')
 
     # calcula valor a palavra com letras considerando a frequência dos caracteres
     st.success('Calculando valor das palavras...')
@@ -75,8 +74,12 @@ def importar_palavras():
         percentual_text.text(f'Progresso: {percentual:.2f}%')
     st.write(df_palavras.sample(10))
 
-    # salvar arquivo atualizado
-    df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
+    # salvar arquivo atualizado por idioma
+    if url[1] == 'ptbr':
+        df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
+    else:
+        df_palavras.to_csv('data/palavras_ingles.csv', index=False, encoding='latin-1')
+
     st.success('Arquivo atualizado com sucesso!')
 
     tempo_final = time.time()
@@ -89,4 +92,4 @@ def importar_palavras():
     return df_frequencia
 
 if __name__ == "__main__":
-    importar_palavras()
+    importar_palavras(url='https://www.ime.usp.br/~pf/dicios/br-utf8.txt')

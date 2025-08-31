@@ -9,14 +9,25 @@ from mostrar_dados import mostrar_dados_caracteres, mostrar_dados_palavras
 
 def tela_streamlit():
     st.title('Análise de palavras em português brasileiro')
-    # -- Importação e atualização
+    # -- IMPORTAÇÃO --
+    ptbr = ['https://www.ime.usp.br/~pf/dicios/br-utf8.txt','ptbr']
+    enus = ['https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words.txt','enus']
+
     with st.expander('Atualizar base de dados'):
-        importar = st.button('Atualizar base de dados')
-        if importar:
-            df_caracteres = importar_palavras()
-        else:
-            df_caracteres = pd.read_csv('data/frequencia_caracteres.csv', encoding='latin-1')
-    
+        col_ptbr, col_enus = st.columns(2)
+        with col_ptbr:
+            importar_ptbr = st.button('Atualizar base de dados PT-BR')
+            if importar_ptbr:
+                df_caracteres = importar_palavras(url = ptbr)
+            else:
+                df_caracteres = pd.read_csv('data/frequencia_caracteres_ptbr.csv', encoding='latin-1')
+        with col_enus:
+            importar_enus = st.button('Atualizar base de dados EN-US')
+            if importar_enus:
+                df_caracteres = importar_palavras(url = enus)
+            else:
+                df_caracteres = pd.read_csv('data/frequencia_caracteres_enus.csv', encoding='latin-1')
+
     # -- tratamento --
     df_caracteres = analise_caracteres(df_caracteres)
     df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
