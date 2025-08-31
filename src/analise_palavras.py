@@ -14,12 +14,13 @@ def analise_caracteres(df_caracteres=None):
     df_caracteres = df_caracteres.sort_values(by='frequencia', ascending=False).reset_index(drop=True)
     st.session_state.df_caracteres_ascii = df_caracteres
 
-    col1, col2 = st.columns(2)
-    col1.metric('Quantidade de caracteres com especiais:', len(st.session_state.df_caracteres))
-    col2.metric('Quantidade de caracteres sem especiais:', len(st.session_state.df_caracteres_ascii))
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric('Qtde com especiais:', len(st.session_state.df_caracteres))
+    col2.metric('Qtde sem especiais:', len(st.session_state.df_caracteres_ascii))
 
     # -- Controle SIM/NÃO --
-    caracteres_especiais = st.segmented_control('Utilizar caracteres especiais?',
+    col5, col6 = st.columns(2)
+    caracteres_especiais = col5.segmented_control('Utilizar caracteres especiais?',
                                                 ['SIM','NÃO'],
                                                 default='SIM', 
                                                 key='controle_caracteres_especiais')
@@ -27,6 +28,18 @@ def analise_caracteres(df_caracteres=None):
         df_caracteres = st.session_state.df_caracteres
     else:
         df_caracteres = st.session_state.df_caracteres_ascii
+
+    #-- Controle Idioma --
+    idioma = col6.segmented_control('Idioma:',
+                                    ['PTBR','ENUS'],
+                                    default='PTBR', 
+                                    key='controle_idioma')
+    if idioma == 'PTBR':
+        st.session_state.df_palavras_ptbr = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
+        st.session_state.palavras_por_tamanho_ptbr = st.session_state.df_palavras_ptbr.groupby('tamanho', as_index=False).count()
+    elif idioma == 'ENUS':
+        st.session_state.df_palavras_enus = pd.read_csv('data/palavras_ingles.csv', encoding='latin-1')
+        st.session_state.palavras_por_tamanho_enus = st.session_state.df_palavras_enus.groupby('tamanho', as_index=False).count()
 
     return df_caracteres
 
