@@ -60,4 +60,5 @@ if __name__ == "__main__":
 """selecionar se considera caracteres especiais
 criar botões de letras
 palavras com letra x na posição y
+criar caixas de texto na quantidade do tamanho da palavra e cada campo ser um filtro de letra naquela posição
 filtrar os caracteres dos filtros ao invés do total"""
