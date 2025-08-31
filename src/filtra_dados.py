@@ -44,19 +44,19 @@ def filtra_dados(df=None):
     
     # Primeira letra
     col1.write('Palavras que começam com:')
-    primeira_letra = col1.segmented_control('', options=caracteres, key='primeira_letra')
+    primeira_letra = col1.segmented_control('', options=caracteres, key='primeira_letra', selection_mode='multi')
     if primeira_letra:
-        df = df[df['palavra'].str.startswith(primeira_letra)]
+        df = df[df['palavra'].str.startswith(tuple(primeira_letra))]
 
     # Última letra
     col2.write('Palavras que terminam com:')
-    ultima_letra = col2.segmented_control('', options=caracteres, key='ultima_letra')    
+    ultima_letra = col2.segmented_control('', options=caracteres, key='ultima_letra', selection_mode='multi')
     if ultima_letra:
-        df = df[df['palavra'].str.endswith(ultima_letra)]
+        df = df[df['palavra'].str.endswith(tuple(ultima_letra))]
     
     # Tamanho da palavra
     col3.write('Tamanho da palavra:')
-    tamanho_palavra = col3.segmented_control('',tamanho_palavra_lista, key='tamanho_palavra')
+    tamanho_palavra = col3.segmented_control('',tamanho_palavra_lista, key='tamanho_palavra', selection_mode='multi')
     if tamanho_palavra:
         df = df[df['palavra'].str.len() == int(tamanho_palavra)]
 
@@ -64,18 +64,20 @@ def filtra_dados(df=None):
     
     # palavras que não tenham a letra
     col4.write('Palavras que não tenham a letra:')
-    letra_nao = col4.segmented_control('',caracteres, key='letra_nao')
+    letra_nao = col4.segmented_control('',caracteres, key='letra_nao', selection_mode='multi')
     if letra_nao:
-        df = df[~df['palavra'].str.contains(letra_nao, case=False)]
+        for l in letra_nao:
+            df = df[~df['palavra'].str.contains(l, case=False)]
  
     # palavras que tenham a letra
     col5.write('Palavras que tenham a letra:')
-    letra = col5.segmented_control('',caracteres, key='letra')
+    letra = col5.segmented_control('',caracteres, key='letra', selection_mode='multi')
     if letra:
-        df = df[df['palavra'].str.contains(letra, case=False)]
+        for l in letra:
+            df = df[df['palavra'].str.contains(l, case=False)]
         col6.write('Na posição:')
         letra_posicao = col6.segmented_control('',tamanho_palavra_lista)
-        # filtrar dataframe pela posição
+        # filtrar dataframe pela posição (adapte se necessário para múltiplas letras)
 
     # -- RESULTADOS --
     st.markdown(f'#### {df.shape[0]} resultados')
