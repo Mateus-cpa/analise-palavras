@@ -47,8 +47,7 @@ def importar_palavras(url):
         for caracter in palavra.lower():
             frequencia_caracteres[caracter] = frequencia_caracteres.get(caracter, 0) + 1
 
-    st.code(frequencia_caracteres)    
-
+    
     # calcula tamanho das palavras
     st.success('Calculando tamanho das palavras...')
 
@@ -77,8 +76,12 @@ def importar_palavras(url):
     # salvar arquivo atualizado por idioma
     if url[1] == 'ptbr':
         df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
+        st.session_state.df_palavras_ptbr = df_palavras
+        st.session_state.df_frequencia_ptbr = df_frequencia
     else:
         df_palavras.to_csv('data/palavras_ingles.csv', index=False, encoding='latin-1')
+        st.session_state.df_palavras_enus = df_palavras
+        st.session_state.df_frequencia_enus = df_frequencia
 
     st.success('Arquivo atualizado com sucesso!')
 
@@ -89,7 +92,7 @@ def importar_palavras(url):
     else:
         st.success(f'tempo corrido: {tempo_decorrido/60:.2f} minutos.')
 
-    return df_frequencia
+    
 
 if __name__ == "__main__":
     importar_palavras(url='https://www.ime.usp.br/~pf/dicios/br-utf8.txt')
