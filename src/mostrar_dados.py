@@ -6,7 +6,7 @@ def mostrar_dados_caracteres(df=None):
     with col1:
         st.metric('Quantidade de caracteres',df.shape[0])
     with col2:
-        st.metric('Maior frequência',df['frequencia'].max())
+        st.metric('Caracter com maior frequência',df['caracter'].where(df['frequencia'] == df['frequencia'].max()).values[0])
 
     st.bar_chart(df, x='caracter', y='frequencia', horizontal=False)
     return df
