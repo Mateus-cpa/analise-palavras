@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 
+
 def analise_caracteres(df_caracteres=None):
     st.session_state.df_caracteres = df_caracteres
     # replace de caracteres especiais para os normais
@@ -40,7 +41,7 @@ def analise_palavras(df_palavras=None):
     df_palavras_por_tamanho.to_csv('data/palavras_por_tamanho.csv', index=False, encoding='latin-1')
     st.session_state.df_palavras_por_tamanho = df_palavras_por_tamanho
 
-
+    
 if __name__ == "__main__":
     analise_caracteres()
     analise_palavras()

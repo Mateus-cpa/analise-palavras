@@ -4,6 +4,15 @@ import pandas as pd
 
 import streamlit as st
 
+def calcular_valor_palavra(palavra):
+    df_caracteres = st.session_state.df_caracteres_ascii
+    valor = 0
+    for letra in palavra:
+        freq = df_caracteres.loc[df_caracteres['caracter'] == letra, 'frequencia']
+        if not freq.empty:
+            valor += freq.values[0]
+    return valor
+
 def importar_palavras():
     """
     Importa a lista de palavras do site da USP.
@@ -31,7 +40,6 @@ def importar_palavras():
     df_palavras: pd.DataFrame = pd.DataFrame(lista_palavras, columns=['palavra']).dropna()
     df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
 
-
     st.success('Iniciando processamento das palavras...')
     
     frequencia_caracteres: dict = {}
@@ -41,14 +49,21 @@ def importar_palavras():
             frequencia_caracteres[caracter] = frequencia_caracteres.get(caracter, 0) + 1
 
     st.code(frequencia_caracteres)    
+
+    # calcula tamanho das palavras
+    df_palavras['tamanho'] = df_palavras['palavra'].str.len()
+
     tempo_final = time.time()
     st.success(f'tempo corrido: {tempo_final-tempo_inicial:.2f} segundos')
 
+    df_frequencia = pd.DataFrame(list(frequencia_caracteres.items()), columns=['caracter', 'frequencia'])
+    df_frequencia.to_csv('data/frequencia_caracteres.csv', index=False, encoding='latin-1')
 
-    df = pd.DataFrame(list(frequencia_caracteres.items()), columns=['caracter', 'frequencia'])
-    df.to_csv('data/frequencia_caracteres.csv', index=False, encoding='latin-1')
+    # calcula valor a palavra com letras considerando a frequência dos caracteres
+    df_palavras['valor_palavra'] = df_palavras['palavra'].apply(calcular_valor_palavra)
+    df_palavras.to_csv('data/palavras_portugues.csv', index=False, encoding='latin-1')
 
-    return df
+    return df_frequencia
 
 if __name__ == "__main__":
     importar_palavras()
