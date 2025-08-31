@@ -1,5 +1,34 @@
 import streamlit as st
+import pandas as pd
 
+def controles():
+    col1, col2 = st.columns(2)
+
+    #-- Controle Idioma --
+    idioma = col1.segmented_control('Idioma:',
+                                    ['PTBR','ENUS'],
+                                    default='PTBR', 
+                                    key='controle_idioma')
+    if idioma == 'PTBR':
+        st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
+        st.session_state.palavras_por_tamanho = st.session_state.df_palavras.groupby('tamanho', as_index=False).count()
+        st.session_state.df_caracteres = pd.read_csv('data/frequencia_caracteres_ptbr.csv', encoding='latin-1')
+    elif idioma == 'ENUS':
+        st.session_state.df_palavras = pd.read_csv('data/palavras_ingles.csv', encoding='latin-1')
+        st.session_state.palavras_por_tamanho = st.session_state.df_palavras.groupby('tamanho', as_index=False).count()
+        st.session_state.df_caracteres = pd.read_csv('data/frequencia_caracteres_enus.csv', encoding='latin-1')
+
+    # -- Controle SIM/NÃO caracteres especiais --
+    caracteres_especiais = col2.segmented_control('Utilizar caracteres especiais?',
+                                                ['SIM','NÃO'],
+                                                default='SIM', 
+                                                key='controle_caracteres_especiais')
+    if caracteres_especiais == 'SIM':
+        df_caracteres = st.session_state.df_caracteres
+    else:
+        df_caracteres = st.session_state.df_caracteres_ascii
+
+    
 def filtra_dados(df=None):
     if df is None:
         return None

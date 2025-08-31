@@ -3,7 +3,7 @@ import pandas as pd
 
 from request_palavras import importar_palavras 
 from analise_palavras import analise_caracteres, analise_palavras
-from filtra_dados import filtra_dados
+from filtra_dados import filtra_dados, controles
 from mostrar_dados import mostrar_dados_caracteres, mostrar_dados_palavras
 
 
@@ -18,18 +18,17 @@ def tela_streamlit():
         with col_ptbr:
             importar_ptbr = st.button('Atualizar base de dados PT-BR')
             if importar_ptbr:
-                df_caracteres = importar_palavras(url = ptbr)
-            else:
-                df_caracteres = pd.read_csv('data/frequencia_caracteres_ptbr.csv', encoding='latin-1')
+                importar_palavras(url = ptbr)
+            
         with col_enus:
             importar_enus = st.button('Atualizar base de dados EN-US')
             if importar_enus:
-                df_caracteres = importar_palavras(url = enus)
-            else:
-                df_caracteres = pd.read_csv('data/frequencia_caracteres_enus.csv', encoding='latin-1')
+                importar_palavras(url = enus)
+            
 
     # -- tratamento --
-    df_caracteres = analise_caracteres(df_caracteres)
+    controles()
+    df_caracteres = analise_caracteres()
     df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
     analise_palavras(df_palavras=df_palavras)
 
@@ -46,7 +45,10 @@ def tela_streamlit():
     analise_palavras(df_palavras=st.session_state.df_palavras)
     mostrar_dados_palavras(st.session_state.df_palavras_por_tamanho)
 
-    
-    
+    # mostrar quais st.session_state estão em cache
+    st.subheader("Dados em cache:")
+    for key, value in st.session_state.items():
+        st.write(f" - {key}: {value}")
+
 if __name__ == "__main__":
     tela_streamlit()
