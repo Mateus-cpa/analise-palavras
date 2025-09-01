@@ -8,6 +8,9 @@ from mostrar_dados import mostrar_dados_caracteres, mostrar_dados_palavras
 
 
 def tela_streamlit():
+    #utilizar largura total da tela
+    st.set_page_config(layout="wide")
+
     st.title('Análise de palavras em português brasileiro')
     # -- IMPORTAÇÃO --
     ptbr = ['https://www.ime.usp.br/~pf/dicios/br-utf8.txt','ptbr']
@@ -33,22 +36,27 @@ def tela_streamlit():
     analise_palavras(df_palavras=df_palavras)
 
     # -- MOSTRAR DADOS CARACTERES --
-    mostrar_dados_caracteres(df_caracteres)
+    mostrar_dados_caracteres()
     
     # -- FILTRO DADOS PALAVRAS --
     if 'df_palavras' not in st.session_state:
         st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
-    filtra_dados(st.session_state.df_palavras)
+    df_palavras = filtra_dados(st.session_state.df_palavras)
 
     # -- MOSTRAR DADOS PALAVRAS --
     st.subheader('Distribuição de palavras por tamanho')
-    analise_palavras(df_palavras=st.session_state.df_palavras)
-    mostrar_dados_palavras(df_caracteres=st.session_state.df_caracteres, df_palavras=st.session_state.df_palavras)
+    analise_palavras(df_palavras=df_palavras)
+    mostrar_dados_palavras(df_palavras=df_palavras)
 
     # mostrar quais st.session_state estão em cache
     st.subheader("Dados em cache:")
     for key, value in st.session_state.items():
-        st.write(f" - {key}: {value}")
+        #se dataframe
+        if isinstance(value, pd.DataFrame):
+            st.write(f" - {key}")
+            st.dataframe(value)
+        else:
+            st.write(f" - {key}: {value}")
 
 if __name__ == "__main__":
     tela_streamlit()

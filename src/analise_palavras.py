@@ -26,8 +26,9 @@ def analise_palavras(df_palavras=None):
     df_palavras_por_tamanho = df_palavras.groupby('tamanho', as_index=False).count()
     df_palavras_por_tamanho = df_palavras_por_tamanho.rename(columns={'palavra': 'quantidade'})
     st.session_state.df_palavras_por_tamanho = df_palavras_por_tamanho
+    df_palavras['palavra'] = df_palavras['palavra'].apply(lambda x: str(x).lower() if isinstance(x, str) else x)
+    st.session_state.df_palavras = df_palavras
 
-    
 if __name__ == "__main__":
     analise_caracteres()
     analise_palavras()

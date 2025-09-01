@@ -3,7 +3,6 @@ import pandas as pd
 
 def controles():
     col1, col2 = st.columns(2)
-
     #-- Controle Idioma --
     idioma = col1.segmented_control('Idioma:',
                                     ['PTBR','ENUS'],
@@ -11,11 +10,11 @@ def controles():
                                     key='controle_idioma')
     if idioma == 'PTBR':
         st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
-        st.session_state.palavras_por_tamanho = st.session_state.df_palavras.groupby('tamanho', as_index=False).count()
+        st.session_state.df_palavras_por_tamanho = st.session_state.df_palavras.groupby('tamanho', as_index=False).count()
         st.session_state.df_caracteres = pd.read_csv('data/frequencia_caracteres_ptbr.csv', encoding='latin-1')
     elif idioma == 'ENUS':
         st.session_state.df_palavras = pd.read_csv('data/palavras_ingles.csv', encoding='latin-1')
-        st.session_state.palavras_por_tamanho = st.session_state.df_palavras.groupby('tamanho', as_index=False).count()
+        st.session_state.df_palavras_por_tamanho = st.session_state.df_palavras.groupby('tamanho', as_index=False).count()
         st.session_state.df_caracteres = pd.read_csv('data/frequencia_caracteres_enus.csv', encoding='latin-1')
 
     # -- Controle SIM/NÃO caracteres especiais --
@@ -26,9 +25,15 @@ def controles():
     if caracteres_especiais == 'SIM':
         df_caracteres = st.session_state.df_caracteres
     else:
-        df_caracteres = st.session_state.df_caracteres_ascii
+        # substitui caracteres especiais pelo ascii de df_caracteres e agrupar os iguais
+        df_caracteres = st.session_state.df_caracteres.copy()
+        df_caracteres['caracter'] = df_caracteres['caracter'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('latin-1')
+        df_caracteres = df_caracteres[df_caracteres['caracter'].str.isalpha()]
+        df_caracteres = df_caracteres.groupby('caracter', as_index=False).sum()
+        df_caracteres = df_caracteres.sort_values(by='frequencia', ascending=False).reset_index(drop=True)
 
-    
+    st.session_state.df_caracteres = df_caracteres
+
 def filtra_dados(df=None):
     if df is None:
         return None
@@ -48,8 +53,9 @@ def filtra_dados(df=None):
     col1, col2, col3 = st.columns(3)
     
     # Primeira letra
+    caracter_inicial = df['palavra'].str[0].unique().tolist()
     col1.write('Palavras que começam com:')
-    primeira_letra = col1.segmented_control('', options=caracteres, key='primeira_letra', selection_mode='multi')
+    primeira_letra = col1.segmented_control('', options=caracter_inicial, key='primeira_letra', selection_mode='multi')
     if primeira_letra:
         df = df[df['palavra'].str.startswith(tuple(primeira_letra))]
 
@@ -73,9 +79,12 @@ def filtra_dados(df=None):
 
     col4, col5, col6 = st.columns(3)    
     
+    # listar caracteres existentes nas palavras de df
+    caracteres_para_retirar = df[df['palavra'].str.len() > 1]['palavra'].apply(lambda x: list(set(x))).explode().unique().tolist()
+
     # palavras que não tenham a letra
     col4.write('Palavras que não tenham a letra:')
-    letra_nao = col4.segmented_control('',caracteres, key='letra_nao', selection_mode='multi')
+    letra_nao = col4.segmented_control('', caracteres_para_retirar, key='letra_nao', selection_mode='multi')
     if letra_nao:
         for l in letra_nao:
             df = df[~df['palavra'].str.contains(l, case=False)]
@@ -92,6 +101,15 @@ def filtra_dados(df=None):
 
     # -- RESULTADOS --
     st.markdown(f'#### {df.shape[0]} resultados')
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        palavra_mais_comum = df_palavras.loc[df_palavras['valor_palavra'].idxmax(), 'palavra']
+        st.metric('Palavra mais comum', palavra_mais_comum)
+    with col2:
+        palavra_menos_comum = df_palavras.loc[df_palavras['valor_palavra'].idxmin(), 'palavra']
+        st.metric('Palavra menos comum', palavra_menos_comum)
+
     st.dataframe(df)
 
     return df

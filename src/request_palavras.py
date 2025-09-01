@@ -4,14 +4,6 @@ import pandas as pd
 
 import streamlit as st
 
-def calcular_valor_palavra(palavra):
-    df_caracteres = st.session_state.df_caracteres_ascii
-    valor = 0
-    for letra in palavra:
-        freq = df_caracteres.loc[df_caracteres['caracter'] == letra, 'frequencia']
-        if not freq.empty:
-            valor += freq.values[0]
-    return valor
 
 def importar_palavras(url):
     """
