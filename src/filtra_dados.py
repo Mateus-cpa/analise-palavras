@@ -37,7 +37,6 @@ def filtra_dados(df=None):
     # Importa listas para filtros
     caracteres = st.session_state.df_caracteres['caracter'].unique().tolist()
     caracteres.sort()
-    tamanho_palavra_lista = st.session_state.df_palavras_por_tamanho['tamanho'].unique().astype(int).tolist()
 
     # -- LIMPAR FILTROS --
     limpar_filtros = st.button('Limpar Filtros')
@@ -54,13 +53,19 @@ def filtra_dados(df=None):
     if primeira_letra:
         df = df[df['palavra'].str.startswith(tuple(primeira_letra))]
 
+    # como filtra os segmented_control ultima_letra apenas com caracteres que tenham no final de palavras
+    caracteres_final_palavra = df['palavra'].str[-1].unique().tolist()
+    caracteres_final_palavra.sort()
+
     # Última letra
     col2.write('Palavras que terminam com:')
-    ultima_letra = col2.segmented_control('', options=caracteres, key='ultima_letra', selection_mode='multi')
+    ultima_letra = col2.segmented_control('', options=caracteres_final_palavra, key='ultima_letra', selection_mode='multi')
     if ultima_letra:
         df = df[df['palavra'].str.endswith(tuple(ultima_letra))]
     
     # Tamanho da palavra
+    tamanho_palavra_lista = df['palavra'].str.len().unique().astype(int).tolist()
+    tamanho_palavra_lista.sort()
     col3.write('Tamanho da palavra:')
     tamanho_palavra = col3.segmented_control('',tamanho_palavra_lista, key='tamanho_palavra', selection_mode='multi')
     if tamanho_palavra:
