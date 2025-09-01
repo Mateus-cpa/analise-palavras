@@ -39,7 +39,13 @@ def filtra_dados(df=None):
     caracteres.sort()
     tamanho_palavra_lista = st.session_state.df_palavras_por_tamanho['tamanho'].unique().astype(int).tolist()
 
-    
+    # -- LIMPAR FILTROS --
+    limpar_filtros = st.button('Limpar Filtros')
+    if limpar_filtros:
+        for key in ['primeira_letra', 'ultima_letra', 'tamanho_palavra', 'letra_nao', 'letra']:
+            if key in st.session_state:
+                del st.session_state[key]
+                
     col1, col2, col3 = st.columns(3)
     
     # Primeira letra
@@ -58,7 +64,7 @@ def filtra_dados(df=None):
     col3.write('Tamanho da palavra:')
     tamanho_palavra = col3.segmented_control('',tamanho_palavra_lista, key='tamanho_palavra', selection_mode='multi')
     if tamanho_palavra:
-        df = df[df['palavra'].str.len() == int(tamanho_palavra)]
+        df = df[df['palavra'].str.len().isin(tamanho_palavra)]
 
     col4, col5, col6 = st.columns(3)    
     
@@ -81,7 +87,7 @@ def filtra_dados(df=None):
 
     # -- RESULTADOS --
     st.markdown(f'#### {df.shape[0]} resultados')
-    st.write(df)
+    st.dataframe(df)
 
     return df
 

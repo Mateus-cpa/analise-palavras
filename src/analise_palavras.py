@@ -14,9 +14,7 @@ def analise_caracteres():
     df_caracteres = df_caracteres.sort_values(by='frequencia', ascending=False).reset_index(drop=True)
     st.session_state.df_frequencia_caracteres_ascii = df_caracteres
 
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric('Qtde com especiais:', len(st.session_state.df_caracteres))
-    col2.metric('Qtde sem especiais:', len(st.session_state.df_frequencia_caracteres_ascii))
+    
 
     
     return df_caracteres

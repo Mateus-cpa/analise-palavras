@@ -43,7 +43,7 @@ def tela_streamlit():
     # -- MOSTRAR DADOS PALAVRAS --
     st.subheader('Distribuição de palavras por tamanho')
     analise_palavras(df_palavras=st.session_state.df_palavras)
-    mostrar_dados_palavras(st.session_state.df_palavras_por_tamanho)
+    mostrar_dados_palavras(df_caracteres=st.session_state.df_caracteres, df_palavras=st.session_state.df_palavras)
 
     # mostrar quais st.session_state estão em cache
     st.subheader("Dados em cache:")
