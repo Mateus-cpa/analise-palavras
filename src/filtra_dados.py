@@ -6,7 +6,7 @@ def controles():
     #-- Controle Idioma --
     idioma = col1.segmented_control('Idioma:',
                                     ['PTBR','ENUS'],
-                                    default='PTBR', 
+                                    default='ENUS', 
                                     key='controle_idioma')
     if idioma == 'PTBR':
         st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
@@ -88,10 +88,13 @@ def filtra_dados(df=None):
     if letra_nao:
         for l in letra_nao:
             df = df[~df['palavra'].str.contains(l, case=False)]
- 
+    
+    #listar caracteres existentes para o fitro
+    caracteres_obrigatorios = df[df['palavra'].str.len() > 1]['palavra'].apply(lambda x: list(set(x))).explode().unique().tolist()
+
     # palavras que tenham a letra
     col5.write('Palavras que tenham a letra:')
-    letra = col5.segmented_control('',caracteres, key='letra', selection_mode='multi')
+    letra = col5.segmented_control('',caracteres_obrigatorios, key='letra', selection_mode='multi')
     if letra:
         for l in letra:
             df = df[df['palavra'].str.contains(l, case=False)]
@@ -103,12 +106,15 @@ def filtra_dados(df=None):
     st.markdown(f'#### {df.shape[0]} resultados')
     
     col1, col2 = st.columns(2)
-    with col1:
-        palavra_mais_comum = df_palavras.loc[df_palavras['valor_palavra'].idxmax(), 'palavra']
-        st.metric('Palavra mais comum', palavra_mais_comum)
-    with col2:
-        palavra_menos_comum = df_palavras.loc[df_palavras['valor_palavra'].idxmin(), 'palavra']
-        st.metric('Palavra menos comum', palavra_menos_comum)
+    try:
+        with col1:
+            palavra_mais_comum = df.loc[df['valor_palavra'].idxmax(), 'palavra']
+            st.metric('Palavra mais comum', palavra_mais_comum)
+        with col2:
+            palavra_menos_comum = df.loc[df['valor_palavra'].idxmin(), 'palavra']
+            st.metric('Palavra menos comum', palavra_menos_comum)
+    except ValueError:
+        st.warning("Não foi possível encontrar palavras com as condições aplicadas.")
 
     st.dataframe(df)
 

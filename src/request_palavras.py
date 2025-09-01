@@ -84,7 +84,23 @@ def importar_palavras(url):
     else:
         st.success(f'tempo corrido: {tempo_decorrido/60:.2f} minutos.')
 
+def importar():
+    ptbr = ['https://www.ime.usp.br/~pf/dicios/br-utf8.txt','ptbr']
+    enus = ['https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words.txt','enus']
+
+    #habilitar apenas com senha
     
+    with st.expander('Atualizar base de dados'):
+        col_ptbr, col_enus = st.columns(2)
+        with col_ptbr:
+            importar_ptbr = st.button('Atualizar base de dados PT-BR', disabled=True)
+            if importar_ptbr:
+                importar_palavras(url = ptbr)
+            
+        with col_enus:
+            importar_enus = st.button('Atualizar base de dados EN-US', disabled=True)
+            if importar_enus:
+                importar_palavras(url = enus)   
 
 if __name__ == "__main__":
-    importar_palavras(url='https://www.ime.usp.br/~pf/dicios/br-utf8.txt')
+    importar(url='https://www.ime.usp.br/~pf/dicios/br-utf8.txt')

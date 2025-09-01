@@ -18,6 +18,16 @@ def mostrar_dados_palavras(df_palavras: pd.DataFrame = None):
         st.bar_chart(st.session_state.df_palavras_por_tamanho, x='tamanho', y='quantidade', horizontal=False)
     except ValueError:
         st.warning("Não há dados para mostrar. Por favor, ajuste os filtros ou importe uma base de dados válida.")  
+
+def mostrar_cache():
+    for key, value in st.session_state.items():
+        #se dataframe
+        if isinstance(value, pd.DataFrame):
+            st.write(f" - {key}")
+            st.dataframe(value)
+        else:
+            st.write(f" - {key}: {value}")
+
 if __name__ == "__main__":
     mostrar_dados_caracteres()
 

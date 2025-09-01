@@ -1,39 +1,26 @@
 import streamlit as st
 import pandas as pd
 
-from request_palavras import importar_palavras 
+from request_palavras import importar
 from analise_palavras import analise_caracteres, analise_palavras
 from filtra_dados import filtra_dados, controles
-from mostrar_dados import mostrar_dados_caracteres, mostrar_dados_palavras
+from mostrar_dados import mostrar_dados_caracteres, mostrar_dados_palavras, mostrar_cache
 
 
 def tela_streamlit():
-    #utilizar largura total da tela
+    #Configura largura total da tela
     st.set_page_config(layout="wide")
 
-    st.title('Análise de palavras em português brasileiro')
+    st.title('Análise de palavras')
     # -- IMPORTAÇÃO --
-    ptbr = ['https://www.ime.usp.br/~pf/dicios/br-utf8.txt','ptbr']
-    enus = ['https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words.txt','enus']
+    importar()
 
-    with st.expander('Atualizar base de dados'):
-        col_ptbr, col_enus = st.columns(2)
-        with col_ptbr:
-            importar_ptbr = st.button('Atualizar base de dados PT-BR')
-            if importar_ptbr:
-                importar_palavras(url = ptbr)
-            
-        with col_enus:
-            importar_enus = st.button('Atualizar base de dados EN-US')
-            if importar_enus:
-                importar_palavras(url = enus)
-            
+    # -- FILTROS idioma e tipo caracteres --  
+    controles()
 
     # -- tratamento --
-    controles()
     df_caracteres = analise_caracteres()
-    df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
-    analise_palavras(df_palavras=df_palavras)
+    analise_palavras(df_palavras= st.session_state.df_palavras)
 
     # -- MOSTRAR DADOS CARACTERES --
     mostrar_dados_caracteres()
@@ -50,13 +37,7 @@ def tela_streamlit():
 
     # mostrar quais st.session_state estão em cache
     st.subheader("Dados em cache:")
-    for key, value in st.session_state.items():
-        #se dataframe
-        if isinstance(value, pd.DataFrame):
-            st.write(f" - {key}")
-            st.dataframe(value)
-        else:
-            st.write(f" - {key}: {value}")
+    mostra_cache()
 
 if __name__ == "__main__":
     tela_streamlit()
