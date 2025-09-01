@@ -20,13 +20,14 @@ def mostrar_dados_palavras(df_palavras: pd.DataFrame = None):
         st.warning("Não há dados para mostrar. Por favor, ajuste os filtros ou importe uma base de dados válida.")  
 
 def mostrar_cache():
-    for key, value in st.session_state.items():
-        #se dataframe
-        if isinstance(value, pd.DataFrame):
-            st.write(f" - {key}")
-            st.dataframe(value)
-        else:
-            st.write(f" - {key}: {value}")
+    with st.expander("Ver dados em cache"):
+        for key, value in st.session_state.items():
+            #se dataframe
+            if isinstance(value, pd.DataFrame):
+                st.write(f" - {key}")
+                st.dataframe(value)
+            else:
+                st.write(f" - {key}: {value}")
 
 if __name__ == "__main__":
     mostrar_dados_caracteres()
