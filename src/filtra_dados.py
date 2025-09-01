@@ -98,8 +98,7 @@ def filtra_dados(df=None):
     if letra:
         for l in letra:
             df = df[df['palavra'].str.contains(l, case=False)]
-        col6.write('Na posição:')
-        letra_posicao = col6.segmented_control('',tamanho_palavra_lista)
+        
     
     # filtrar dataframe pela posição (adapte se necessário para múltiplas letras)
     if len(tamanho_palavra) == 1:
@@ -111,22 +110,26 @@ def filtra_dados(df=None):
                 df = df[df['palavra'].str.len() >= pos]
                 df = df[df['palavra'].str[pos - 1] == letra_filtro]
     else:
-        col6.warning('Este filtro aparecerá se houver apenas um tamanho de palavra selecionado.')
+        col6.warning('Este filtro aparecerá se houver apenas 1 tamanho de palavra selecionado.')
     # -- RESULTADOS --
-    st.markdown(f'#### {df.shape[0]} resultados')
+    st.subheader(f'{df.shape[0]} resultados')
     
-    col1, col2 = st.columns(2)
+    st.dataframe(df)
+
+    st.write("""As pontuações são resultado da soma da frequência das letras nas palavras.
+    Desta forma são calculadas as palavras com maior e menor pontuação considerando as letras que a compõem.
+    Ou seja, as palavras com maior pontuação são aquelas que possuem as letras mais frequentes em suas composições.""")
+    col1, col2 = st.columns([6,4])
     try:
         with col1:
-            palavra_mais_comum = df.loc[df['valor_palavra'].idxmax(), 'palavra']
-            st.metric('Palavra mais comum', palavra_mais_comum)
+            palavra_maior_pontuacao = df.loc[df['valor_palavra'].idxmax(), 'palavra']
+            st.metric('Maior pontuação', palavra_maior_pontuacao)
         with col2:
-            palavra_menos_comum = df.loc[df['valor_palavra'].idxmin(), 'palavra']
-            st.metric('Palavra menos comum', palavra_menos_comum)
+            palavra_menor_pontuacao = df.loc[df['valor_palavra'].idxmin(), 'palavra']
+            st.metric('Menor pontuação', palavra_menor_pontuacao)
     except ValueError:
         st.warning("Não foi possível encontrar palavras com as condições aplicadas.")
-
-    st.dataframe(df)
+    
 
     return df
 

@@ -11,7 +11,7 @@ def tela_streamlit():
     #Configura largura total da tela
     st.set_page_config(layout="wide")
 
-    st.title('Análise de palavras')
+    st.title('Estudos sobre Palavras em português/inglês')
     # -- IMPORTAÇÃO --
     importar()
 
@@ -24,7 +24,8 @@ def tela_streamlit():
 
     # -- MOSTRAR DADOS CARACTERES --
     mostrar_dados_caracteres()
-    
+
+    st.header('Análise das palavras')
     # -- FILTRO DADOS PALAVRAS --
     if 'df_palavras' not in st.session_state:
         st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
