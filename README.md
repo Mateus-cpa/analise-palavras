@@ -3,7 +3,7 @@
 
 Este projeto realiza a análise de palavras em português e inglês, permitindo importar listas de palavras, processar frequências de caracteres, aplicar filtros e visualizar os resultados em uma interface web interativa com Streamlit.
 
-O painel se contra disponível no [link](https://tratamento-palavras.streamlit.app/)
+O painel se contra disponível no [link](https://tratamento-palavras.streamlit.app/).
 
 ## Funcionalidades Desenvolvidas
 

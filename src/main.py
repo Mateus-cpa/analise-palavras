@@ -23,9 +23,10 @@ def tela_streamlit():
     analise_palavras(df_palavras= st.session_state.df_palavras)
 
     # -- MOSTRAR DADOS CARACTERES --
+    st.header('Sobre os caracteres')
     mostrar_dados_caracteres()
 
-    st.header('Análise das palavras')
+    st.header('Sobre as palavras')
     # -- FILTRO DADOS PALAVRAS --
     if 'df_palavras' not in st.session_state:
         st.session_state.df_palavras = pd.read_csv('data/palavras_portugues.csv', encoding='latin-1')
