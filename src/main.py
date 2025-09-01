@@ -37,7 +37,7 @@ def tela_streamlit():
 
     # mostrar quais st.session_state estão em cache
     st.subheader("Dados em cache:")
-    mostra_cache()
+    mostrar_cache()
 
 if __name__ == "__main__":
     tela_streamlit()

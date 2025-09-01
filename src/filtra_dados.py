@@ -100,8 +100,18 @@ def filtra_dados(df=None):
             df = df[df['palavra'].str.contains(l, case=False)]
         col6.write('Na posição:')
         letra_posicao = col6.segmented_control('',tamanho_palavra_lista)
-        # filtrar dataframe pela posição (adapte se necessário para múltiplas letras)
-
+    
+    # filtrar dataframe pela posição (adapte se necessário para múltiplas letras)
+    if len(tamanho_palavra) == 1:
+        for pos in range(1, tamanho_palavra[0] + 1):
+            col6.text_input(f'Letra na posição {pos}:', max_chars=1, key=f'letra_filtro_{pos}')
+            #filtrar df se a palavra tiver a letra na posição
+            if f'letra_filtro_{pos}' in st.session_state and st.session_state[f'letra_filtro_{pos}']:
+                letra_filtro = st.session_state[f'letra_filtro_{pos}']
+                df = df[df['palavra'].str.len() >= pos]
+                df = df[df['palavra'].str[pos - 1] == letra_filtro]
+    else:
+        col6.warning('Este filtro aparecerá se houver apenas um tamanho de palavra selecionado.')
     # -- RESULTADOS --
     st.markdown(f'#### {df.shape[0]} resultados')
     
