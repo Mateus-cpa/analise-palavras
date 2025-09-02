@@ -82,8 +82,8 @@ def filtra_dados(df=None):
     # listar caracteres existentes nas palavras de df
     caracteres_para_retirar = df[df['palavra'].str.len() > 1]['palavra'].apply(lambda x: list(set(x))).explode().unique().tolist()
 
-    # palavras que não tenham a letra
-    col4.write('Palavras que não tenham a letra:')
+    # palavras que não tenham o caractere
+    col4.write('Palavras que NÃO tenham o caractere:')
     letra_nao = col4.segmented_control('', caracteres_para_retirar, key='letra_nao', selection_mode='multi')
     if letra_nao:
         for l in letra_nao:
@@ -92,8 +92,8 @@ def filtra_dados(df=None):
     #listar caracteres existentes para o fitro
     caracteres_obrigatorios = df[df['palavra'].str.len() > 1]['palavra'].apply(lambda x: list(set(x))).explode().unique().tolist()
 
-    # palavras que tenham a letra
-    col5.write('Palavras que tenham a letra:')
+    # palavras que tenham o caractere
+    col5.write('Palavras que tenham o caractere:')
     letra = col5.segmented_control('',caracteres_obrigatorios, key='letra', selection_mode='multi')
     if letra:
         for l in letra:
